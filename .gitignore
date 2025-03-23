@@ -1,3 +1,6 @@
+key.pem
+certs.pem
+
 # Compiled class file
 *.class
 *.jar

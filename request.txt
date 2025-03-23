@@ -1,0 +1,4 @@
+GET /this/url/you/want/to/get HTTP/1.1
+Host: localhost
+Connection: close
+
