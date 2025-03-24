@@ -10,7 +10,7 @@ import io.vertx.core.dns.AddressResolverOptions;
 // import io.vertx.launcher.application.VertxApplication;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.net.PemKeyCertOptions;
-
+import java.util.Random;
 public class VertxServer extends VerticleBase {
 
   public static void main(String[] args) {
@@ -45,16 +45,28 @@ public class VertxServer extends VerticleBase {
     secureOptions.setSsl(true);
     secureOptions.setKeyCertOptions(new PemKeyCertOptions().setKeyPath("key.pem").setCertPath("certs.pem"));
 
-    String responseText = new String("Just a test");
+    /*
+    router.get("/img/:x/:y").handler(ctx -> {
+        ctx.response()
+                .putHeader("Content-Type", "image/png")
+                .end(image.getPixel(Integer.parseInt(ctx.pathParam("x")), Integer.parseInt(ctx.pathParam("y"))));
+      });
+      */
+    // I feel like this is caching
+    Random random = new Random();
+    // String responseText = new String("<html><a href=\"/fortune\">fortune</a></html>");
     router
       .route("/*")
       .handler(routingContext -> {
+    	  String responseText = new String("<html><a href=\"/fortune" + Integer.toString(random.nextInt()) + "\">fortune</a></html>");  
         routingContext
           .response()
-          .putHeader("Content-Type", "text/plain")
+          .putHeader("Content-Type", "text/html")
           .putHeader("Content-Length", Integer.toString(responseText.length()))
-          .putHeader("Alt-Svc", "h3=\"localhost:8443\", quic=\"localhost:8443\"")
+          .putHeader("Alt-Svc", "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3-Q050=\":443\"; ma=86400, h3-Q046=\":443\"; ma=86400, h3-Q043=\":443\"; ma=86400, quic=\":443\"; ma=86400; v=\"43,46\"")
           .putHeader("Application-Protocol", "h3,quic,h2,http/1.1");
+        // .putHeader("X-Quic", "h3");
+        
           routingContext.response().write(responseText);
           routingContext.response().end();
       });

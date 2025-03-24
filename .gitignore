@@ -1,5 +1,6 @@
 key.pem
 certs.pem
+/bin/
 
 # Compiled class file
 *.class
